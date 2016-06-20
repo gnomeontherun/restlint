@@ -1,0 +1,19 @@
+{
+  "name": "restlint",
+  "version": "0.1.0",
+  "description": "Lint your rest API definitions",
+  "main": "cli.js",
+  "author": "Jeremy Wilken <gnomation@gnomeontherun.com>",
+  "license": "MIT",
+  "bin": {
+    "restlint": "cli.js"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "is-plural": "^0.1.1",
+    "require-directory": "^2.1.1",
+    "swagger-parser": "^3.4.1",
+    "wordpos": "^1.1.0"
+  }
+}

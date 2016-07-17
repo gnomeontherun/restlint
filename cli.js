@@ -6,6 +6,7 @@ const program = require('commander');
 const hooks = require('./lib/hooks');
 const chalk = require('chalk');
 const errors = [];
+const promises = [];
 
 // Show help by default if no values are passed
 if (!process.argv.slice(2).length) {
@@ -29,11 +30,7 @@ program
       // Check each property
       for (let property in schema.properties) {
         hooks.model_properties.forEach(function(hook) {
-          try {
-            hook(property, schema.properties[property]);
-          } catch (error) {
-            errors.push(error);
-          }
+          promises.push(hook(property, schema.properties[property]))
         });
       }
     }
@@ -42,25 +39,47 @@ program
     for (let path in api.paths) {
       let endpoint = api.paths[path];
       hooks.path_url.forEach(function(hook) {
-        try {
-          hook(path);
-        } catch (error) {
-          errors.push(error);
+        promises.push(hook(path));
+
+        // Check methods
+        for (let method in endpoint) {
+          for (let response in endpoint[method].responses) {
+            hooks.response.forEach(function(hook) {
+              promises.push(hook(response, endpoint[method].responses[response]));
+            });
+          }
         }
       });
     }
 
-    if (errors.length > 0) {
-      console.log(chalk.red(errors.length + ' errors found'))
-      errors.forEach(function(error) {
-        console.log(chalk.red(error.message));
+    // Handle all promises and report out
+    Promise.all(promises).then(function(results) {
+      var errors = 0;
+      results.forEach(function(result) {
+        if (result.length) {
+          result.forEach(function(line) {
+            errors += 1;
+            console.log(chalk.red(' > ' + line));
+          });
+        }
       });
-    } else {
-      console.log(chalk.green('No errors found.'))
-    }
+
+      // Check for errors in the run and report status
+      if (errors) {
+        console.log('');
+        console.log(chalk.red(errors + ' errors found'))
+      } else {
+        console.log(chalk.green('No errors found.'));
+      }
+    }).catch(function(error) {
+      // Catch any catastrophic errors and report when possible
+      console.log(error);
+    });
+
   })
-  .catch(function(err) {
-    console.error(err);
+  .catch(function(error) {
+    // Unable to parse swagger, sorry :(
+    console.error(error);
   });
 
 })

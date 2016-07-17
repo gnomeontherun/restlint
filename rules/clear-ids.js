@@ -1,7 +1,13 @@
 module.exports = {
   model_properties: function(property, value) {
-    if (property == 'id') {
-      throw new Error('Can not use `id`, should prefix this like `item_id`');
-    }
+    return new Promise(function(resolve, reject) {
+      var errors = [];
+
+      if (property == 'id') {
+        errors.push(['Can not use `id`, should prefix this like `item_id`']);
+      }
+      
+      resolve(errors);
+    });
   }
 }

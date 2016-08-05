@@ -7,6 +7,7 @@ const hooks = require('./lib/hooks');
 const chalk = require('chalk');
 const errors = [];
 const promises = [];
+const config = require('./lib/config');
 
 // Show help by default if no values are passed
 if (!process.argv.slice(2).length) {
@@ -23,32 +24,23 @@ program
   parser
   .validate(definition)
   .then(function(api) {
-    
+
+    // Check swagger file
+    hooks.definition.forEach(function(hook) {
+      promises.push(hook(api, config));
+    });
+
     // Check models
     for (let model in api.definitions) {
-      let schema = api.definitions[model];
-      // Check each property
-      for (let property in schema.properties) {
-        hooks.model_properties.forEach(function(hook) {
-          promises.push(hook(property, schema.properties[property]))
-        });
-      }
+      hooks.models.forEach(function(hook) {
+        promises.push(hook(api.definitions[model], api, config));
+      });
     }
 
-    // Check uris
+    // Check paths
     for (let path in api.paths) {
-      let endpoint = api.paths[path];
-      hooks.path_url.forEach(function(hook) {
-        promises.push(hook(path));
-
-        // Check methods
-        for (let method in endpoint) {
-          for (let response in endpoint[method].responses) {
-            hooks.response.forEach(function(hook) {
-              promises.push(hook(response, endpoint[method].responses[response]));
-            });
-          }
-        }
+      hooks.paths.forEach(function(hook) {
+        promises.push(hook(path, api.paths[path], api, config));
       });
     }
 

@@ -1,11 +1,15 @@
+'use strict';
+
 module.exports = {
-  model_properties: function(property, value) {
+  models: function(model, api, config) {
     return new Promise(function(resolve, reject) {
       var errors = [];
 
-      if (property == 'id') {
-        errors.push(['Can not use `id`, should prefix this like `item_id`']);
-      }
+      for (let property in model.properties) {
+        if (property == 'id') {
+          errors.push(['Can not use `id`, should prefix this like `item_id`']);
+        }
+      };
       
       resolve(errors);
     });

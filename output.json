@@ -1,0 +1,2597 @@
+{
+  "basePath": "/",
+  "definitions": {
+    "App": {
+      "properties": {
+        "appId": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "config": {
+          "additionalProperties": {
+            "properties": {
+              "default": {
+                "type": "object"
+              },
+              "max": {
+                "type": "object"
+              },
+              "min": {
+                "type": "object"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "container_name": {
+          "type": "string"
+        },
+        "cpus": {
+          "format": "double",
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "install_time": {
+          "type": "string"
+        },
+        "installed_by_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "last_updated_by_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "last_updated_time": {
+          "type": "string"
+        },
+        "memory": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "AppUserPrivilege": {
+      "properties": {
+        "app_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "privilege": {
+          "enum": [
+            "READ",
+            "WRITE",
+            "EXECUTE",
+            "GRANT"
+          ],
+          "type": "string"
+        },
+        "privilege_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "user_id": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigElement": {
+      "properties": {
+        "default": {
+          "type": "object"
+        },
+        "max": {
+          "type": "object"
+        },
+        "min": {
+          "type": "object"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Job": {
+      "properties": {
+        "app_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "config": {
+          "type": "object"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "job_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "job_status": {
+          "enum": [
+            "staged",
+            "waiting",
+            "running",
+            "killed",
+            "failed",
+            "success"
+          ],
+          "type": "string"
+        },
+        "owner_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "password": {
+          "type": "string"
+        },
+        "staged_time": {
+          "type": "string"
+        },
+        "system_name": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MultipartFile": {
+      "type": "object"
+    }
+  },
+  "host": "appcenter-app-services-int.ac.uda.io:80",
+  "info": {
+    "contact": {
+      "name": "appcenter"
+    },
+    "description": "App Api is used for all app related trasactions",
+    "license": {
+      "name": "Git Hub",
+      "url": "https://github.td.teradata.com/appcenter/app-service"
+    },
+    "termsOfService": "http://uda.io",
+    "title": "App API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Application Root",
+        "operationId": "root",
+        "parameters": [],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned list of apps",
+            "schema": {
+              "items": {
+                "properties": {
+                  "versions": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Get root",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "List all Apps",
+        "operationId": "allAppsUsingGET",
+        "parameters": [
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "user_id",
+            "format": "int64",
+            "in": "query",
+            "name": "user_id",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "collectionFormat": "multi",
+            "description": "privileges",
+            "enum": [
+              "READ",
+              "WRITE",
+              "EXECUTE",
+              "GRANT"
+            ],
+            "in": "query",
+            "items": {
+              "enum": [
+                "READ",
+                "WRITE",
+                "EXECUTE",
+                "GRANT"
+              ],
+              "type": "string"
+            },
+            "name": "privileges",
+            "required": false,
+            "type": "array"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned list of apps",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "config": {
+                    "additionalProperties": {
+                      "properties": {
+                        "default": {
+                          "type": "object"
+                        },
+                        "max": {
+                          "type": "object"
+                        },
+                        "min": {
+                          "type": "object"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "object"
+                  },
+                  "container_name": {
+                    "type": "string"
+                  },
+                  "cpus": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  },
+                  "install_time": {
+                    "type": "string"
+                  },
+                  "installed_by_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "last_updated_by_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "last_updated_time": {
+                    "type": "string"
+                  },
+                  "memory": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "versions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Get all Apps",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Add a new App",
+        "operationId": "saveUsingPOST",
+        "parameters": [
+          {
+            "description": "app",
+            "in": "body",
+            "name": "app",
+            "required": true,
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Successfully created an app",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Add an App",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Delete an existing App",
+        "operationId": "deleteAppByIdUsingDELETE",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Successfully removed an app"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Delete an App",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Get a particular App",
+        "operationId": "getAppByIdUsingGET",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned an app",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Get an App by id",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Update an existing app",
+        "operationId": "updateUsingPATCH",
+        "parameters": [
+          {
+            "description": "app",
+            "in": "body",
+            "name": "app",
+            "required": true,
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Successfully updated an App",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Update an App",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/container/start": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "description": "Upload a sql file",
+        "operationId": "uploadFileUsingPOST",
+        "parameters": [
+          {
+            "description": "file",
+            "in": "formData",
+            "name": "file",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "default": "sql",
+            "description": "Type of app",
+            "enum": [
+              "sql",
+              "bteq"
+            ],
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Successfully created a container",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "additionalProperties": {
+                    "properties": {
+                      "default": {
+                        "type": "object"
+                      },
+                      "max": {
+                        "type": "object"
+                      },
+                      "min": {
+                        "type": "object"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "container_name": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                },
+                "install_time": {
+                  "type": "string"
+                },
+                "installed_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_by_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "last_updated_time": {
+                  "type": "string"
+                },
+                "memory": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "versions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Upload a sql file",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/jobs": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gives status of all the Jobs of an App",
+        "operationId": "getJobsForAppUsingGET",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned status of an App Job",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "config": {
+                    "type": "object"
+                  },
+                  "end_time": {
+                    "type": "string"
+                  },
+                  "job_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "job_status": {
+                    "enum": [
+                      "staged",
+                      "waiting",
+                      "running",
+                      "killed",
+                      "failed",
+                      "success"
+                    ],
+                    "type": "string"
+                  },
+                  "owner_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "staged_time": {
+                    "type": "string"
+                  },
+                  "system_name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Status of all Jobs of an App",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Start a new App run. Need to specify system_name, username and password to run a job.",
+        "operationId": "startJobUsingPOST",
+        "parameters": [
+          {
+            "description": "job",
+            "in": "body",
+            "name": "job",
+            "required": true,
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "default": false,
+            "description": "force",
+            "in": "query",
+            "name": "force",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully started app",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Start an app Job",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/jobs/{job_id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Stop an App Job",
+        "operationId": "stopAppJobUsingDELETE",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "job_id",
+            "format": "int64",
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully stopped an App Job",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "405": {
+            "description": "Cannot stop an already completed job"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Stop an App Job",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gives status of an App Job based on id",
+        "operationId": "getJobsForAppByIdUsingGET",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "job_id",
+            "format": "int64",
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned status of an App Job",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Status of a particular App Job",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Start multiple instances of the App Job",
+        "operationId": "scaleAppJobUsingPATCH",
+        "parameters": [
+          {
+            "description": "job",
+            "in": "body",
+            "name": "job",
+            "required": true,
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "job_id",
+            "format": "int64",
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "default": false,
+            "description": "Force scale the job",
+            "enum": [
+              "true",
+              "false"
+            ],
+            "in": "query",
+            "name": "force",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully scaled an App Job",
+            "schema": {
+              "properties": {
+                "app_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "job_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "job_status": {
+                  "enum": [
+                    "staged",
+                    "waiting",
+                    "running",
+                    "killed",
+                    "failed",
+                    "success"
+                  ],
+                  "type": "string"
+                },
+                "owner_id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "staged_time": {
+                  "type": "string"
+                },
+                "system_name": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "409": {
+            "description": "Scaling a job that is not yet running"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Scale out an App Job",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/privileges": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Return all the privileges of all the Users for an App",
+        "operationId": "getAppPrivlegesUsingGET",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned list of privileges for an App",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "privilege": {
+                    "enum": [
+                      "READ",
+                      "WRITE",
+                      "EXECUTE",
+                      "GRANT"
+                    ],
+                    "type": "string"
+                  },
+                  "privilege_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "user_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Return privileges for an App",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/privileges/{user_id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Remove Read/Write/Execute privilege from a User for an App ",
+        "operationId": "removeAppPrivlegeUsingDELETE",
+        "parameters": [
+          {
+            "description": "List of privileges (READ, WRITE, EXECUTE)",
+            "in": "body",
+            "name": "privileges",
+            "required": true,
+            "schema": {
+              "items": {
+                "enum": [
+                  "READ",
+                  "WRITE",
+                  "EXECUTE",
+                  "GRANT"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "user_id",
+            "format": "int64",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Successfully removed privilege of a User for an App"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Delete privilege of a User for an App",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Return User's privileges for an App",
+        "operationId": "getUserAppPrivlegesUsingGET",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "user_id",
+            "format": "int64",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned list of privileges of a User for an App",
+            "schema": {
+              "items": {
+                "enum": [
+                  "READ",
+                  "WRITE",
+                  "EXECUTE",
+                  "GRANT"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Return privileges for a User for an App",
+        "tags": [
+          "app-controller"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Give Read/Write/Execute privilege to a User for an App ",
+        "operationId": "addAppPrivilegeUsingPOST",
+        "parameters": [
+          {
+            "description": "List of privileges (READ, WRITE, EXECUTE)",
+            "in": "body",
+            "name": "privileges",
+            "required": true,
+            "schema": {
+              "items": {
+                "enum": [
+                  "READ",
+                  "WRITE",
+                  "EXECUTE",
+                  "GRANT"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "user_id",
+            "format": "int64",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "enum": [
+                  "READ",
+                  "WRITE",
+                  "EXECUTE",
+                  "GRANT"
+                ],
+                "type": "string"
+              },
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Successfully added privilege for a user for an app",
+            "schema": {
+              "items": {
+                "enum": [
+                  "READ",
+                  "WRITE",
+                  "EXECUTE",
+                  "GRANT"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Add privilege for a User for an App",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/apps/{app_id}/versions/{version}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Delete version of App",
+        "operationId": "deleteAppVersionUsingDELETE",
+        "parameters": [
+          {
+            "description": "app_id",
+            "format": "int64",
+            "in": "path",
+            "name": "app_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "version",
+            "in": "path",
+            "name": "version",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "DELETE version of App"
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        },
+        "summary": "Delete Versions of App",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/jobs": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gives status of all the deployed Apps jobs",
+        "operationId": "getRunningAppsUsingGET",
+        "parameters": [
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned status of all Apps",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "config": {
+                    "type": "object"
+                  },
+                  "end_time": {
+                    "type": "string"
+                  },
+                  "job_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "job_status": {
+                    "enum": [
+                      "staged",
+                      "waiting",
+                      "running",
+                      "killed",
+                      "failed",
+                      "success"
+                    ],
+                    "type": "string"
+                  },
+                  "owner_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "staged_time": {
+                    "type": "string"
+                  },
+                  "system_name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Marathon or Chronos unreachanble"
+          }
+        },
+        "summary": "Status of all the Apps jobs",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/running_jobs": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gives status of all the deployed Apps jobs",
+        "operationId": "getRunningAppsUsingGET",
+        "parameters": [
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned status of all Apps",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "config": {
+                    "type": "object"
+                  },
+                  "end_time": {
+                    "type": "string"
+                  },
+                  "job_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "job_status": {
+                    "enum": [
+                      "staged",
+                      "waiting",
+                      "running",
+                      "killed",
+                      "failed",
+                      "success"
+                    ],
+                    "type": "string"
+                  },
+                  "owner_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "staged_time": {
+                    "type": "string"
+                  },
+                  "system_name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Marathon or Chronos unreachanble"
+          }
+        },
+        "summary": "Status of all the Apps jobs",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    },
+    "/runningJobs": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gives status of all the deployed Apps jobs",
+        "operationId": "getRunningAppsUsingGET",
+        "parameters": [
+          {
+            "description": "Authorization",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned status of all Apps",
+            "schema": {
+              "items": {
+                "properties": {
+                  "app_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "config": {
+                    "type": "object"
+                  },
+                  "end_time": {
+                    "type": "string"
+                  },
+                  "job_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "job_status": {
+                    "enum": [
+                      "staged",
+                      "waiting",
+                      "running",
+                      "killed",
+                      "failed",
+                      "success"
+                    ],
+                    "type": "string"
+                  },
+                  "owner_id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "staged_time": {
+                    "type": "string"
+                  },
+                  "system_name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "User does not have the necessary permissions for the resource"
+          },
+          "500": {
+            "description": "Marathon or Chronos unreachanble"
+          }
+        },
+        "summary": "Status of all the Apps jobs",
+        "tags": [
+          "app-controller"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0",
+  "tags": [
+    {
+      "description": "App Controller",
+      "name": "app-controller"
+    }
+  ]
+}

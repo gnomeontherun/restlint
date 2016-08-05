@@ -71,7 +71,7 @@ program
   })
   .catch(function(error) {
     // Unable to parse swagger, sorry :(
-    console.error(error);
+    console.error(error.message);
   });
 
 })
